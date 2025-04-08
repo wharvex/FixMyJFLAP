@@ -1,11 +1,17 @@
 package org.wharvex.fixjflap;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class FileLoader {
+  private String rootDirPath;
   private File[] rootDirFiles;
 
   public FileLoader(String rootDirAbsolutePath) {
+    this.rootDirPath = rootDirAbsolutePath;
     File rootDir = new File(rootDirAbsolutePath);
     if (rootDir.isDirectory()) {
       rootDirFiles = rootDir.listFiles();
@@ -45,6 +51,32 @@ public class FileLoader {
     System.arraycopy(array1, 0, result, 0, array1.length);
     System.arraycopy(array2, 0, result, array1.length, array2.length);
     return result;
+  }
+
+  // Helper method to get all lines from a file.
+  public static List<String> getAllLines(File file) {
+    try {
+      return Files.readAllLines(file.toPath());
+    } catch (IOException e) {
+      throw new RuntimeException(
+          "Error reading file: " + file.getAbsolutePath(), e);
+    }
+  }
+
+  public static void replaceLine(Path filePath, int lineNumber,
+                                 String newLine) {
+    List<String> lines = null;
+    try {
+      lines = Files.readAllLines(filePath);
+      if (lineNumber > 0 && lineNumber <= lines.size()) {
+        lines.set(lineNumber - 1, newLine);
+        Files.write(filePath, lines);
+      } else {
+        throw new IllegalArgumentException("Invalid line number");
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
