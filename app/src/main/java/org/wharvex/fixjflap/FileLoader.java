@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileLoader {
@@ -76,6 +77,28 @@ public class FileLoader {
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  public static void replaceLinesInFiles(File[] files,
+                                         String targetLineBase,
+                                         String newLineBase) {
+    for (File file : files) {
+      var lines = FileLoader.getAllLines(file);
+      var targetLineNums = new ArrayList<Integer>();
+      var lastLineNum = lines.size();
+      for (int i = 0; i < lastLineNum; i++) {
+        String line = lines.get(i);
+        if (line.startsWith(targetLineBase)) {
+          targetLineNums.add(i + 1);
+        }
+      }
+      for (int targetLineNum : targetLineNums) {
+        var targetLine = lines.get(targetLineNum - 1);
+          var newLine = targetLine.replace(targetLineBase, newLineBase);
+          FileLoader.replaceLine(file.toPath(), targetLineNum, newLine);
+        }
+      }
     }
   }
 

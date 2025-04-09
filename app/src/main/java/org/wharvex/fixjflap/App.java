@@ -19,31 +19,8 @@ public class App {
 
     File[] javaFiles = fileLoader.getJavaFiles();
 
-    for (File file : javaFiles) {
-      var lines = FileLoader.getAllLines(file);
-      var packageDeclarationLineNum = 1;
-      boolean packageDeclarationFound = false;
-      var lastLineNum = lines.size();
-      while (packageDeclarationLineNum < lastLineNum) {
-        String line = lines.get(packageDeclarationLineNum);
-        if (line.startsWith("package ")) {
-          packageDeclarationFound = true;
-          break;
-        }
-        packageDeclarationLineNum++;
-      }
-      if (packageDeclarationFound) {
-        var packageDeclarationLine =
-            lines.get(packageDeclarationLineNum - 1);
-        if (!packageDeclarationLine.startsWith(
-            "package org.wharvex.jflap.")) {
-          var newLine = packageDeclarationLine.replace("package ",
-              "package org.wharvex.jflap.");
-          FileLoader.replaceLine(file.toPath(),
-              packageDeclarationLineNum - 1, newLine);
-        }
-      }
-      break;
-    }
+    FileLoader.replaceLinesInFiles(javaFiles, "import gui.",
+        "import org.wharvex.jflap.gui.");
+
   }
 }
