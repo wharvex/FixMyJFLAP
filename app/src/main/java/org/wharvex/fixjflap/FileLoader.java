@@ -95,12 +95,9 @@ public class FileLoader {
       }
       for (int targetLineNum : targetLineNums) {
         var targetLine = lines.get(targetLineNum - 1);
-          var newLine = targetLine.replace(targetLineBase, newLineBase);
-          FileLoader.replaceLine(file.toPath(), targetLineNum, newLine);
-        }
+        var newLine = targetLine.replace(targetLineBase, newLineBase);
+        FileLoader.replaceLine(file.toPath(), targetLineNum, newLine);
       }
     }
   }
-
-
 }
